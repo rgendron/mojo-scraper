@@ -1,0 +1,18 @@
+language: ruby
+
+notifications:
+  email: false
+
+rvm:
+  - 2.2
+  - ruby-head
+
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+
+before_install:
+  - gem install fakeweb
+
+script:
+  - "bundle exec rake spec"
