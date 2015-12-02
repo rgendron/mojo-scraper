@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rgendron/mojo-scraper.svg?branch=master)](https://travis-ci.org/rgendron/mojo-scraper)
+
 ## Description
 
 The Mojo Scraper gem allows you to easy access publicly available data from BoxOfficeMojo.
