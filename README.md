@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rgendron/mojo-scraper.svg?branch=master)](https://travis-ci.org/rgendron/mojo-scraper)
+[![Build Status](https://travis-ci.org/rgendron/mojo-scraper.svg?branch=master)](https://travis-ci.org/rgendron/mojo-scraper) [![Dependency Status](https://gemnasium.com/rgendron/mojo-scraper.svg)](https://gemnasium.com/rgendron/mojo-scraper)
 
 ## Description
 
