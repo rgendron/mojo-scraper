@@ -39,7 +39,8 @@ describe 'Mojo::Movie' do
     end
 
     it 'finds the adjusted box office' do
-      expect(subject.adjusted_domestic_box_office_lifetime).to eq main_page.adjusted_domestic_box_office_lifetime
+      expected = main_page.adjusted_box_office_lifetime
+      expect(subject.adjusted_box_office_lifetime).to eq expected
     end
 
     it 'find the timestamp' do

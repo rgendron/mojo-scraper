@@ -22,28 +22,19 @@ RSpec.configure do |config|
 end
 
 MOJO_PAGE_SAMPLES = {
-  "http://www.boxofficemojo.com/movies/?id=starwars4.htm&adjust_yr=#{Mojo::ADJUST_YEAR}" => 'starwars4.html',
-  'http://www.boxofficemojo.com/movies/alphabetical.htm?letter=G&page=2&p=.htm' => 'alpha_listing_page_g.html',
-  'http://www.boxofficemojo.com/alltime/domestic.htm?page=1&p=.htm' => 'domestic_listing_page_1.html',
-  'http://www.boxofficemojo.com/alltime/domestic.htm?page=2&p=.htm' => 'domestic_listing_page_2.html',
-  'http://www.boxofficemojo.com/alltime/domestic.htm?page=3&p=.htm' => 'domestic_listing_page_3.html'
+  "movies/?id=starwars4.htm&adjust_yr=#{Mojo::ADJUST_YEAR}" => 'starwars4.html',
+  'movies/alphabetical.htm?letter=G&page=2' => 'alpha_listing_page_g.html',
+  'alltime/domestic.htm?page=1&p=.htm' => 'domestic_listing_page_1.html',
+  'alltime/domestic.htm?page=2&p=.htm' => 'domestic_listing_page_2.html',
+  'alltime/domestic.htm?page=3&p=.htm' => 'domestic_listing_page_3.html'
 
 }
 
-# url = "http://www.boxofficemojo.com/movies/?id=starwars4.htm"
-# file = File.absolute_path(File.dirname(__FILE__) + '/fixtures/starwars4.html')
-# FakeWeb.register_uri(:get, url, :body => File.read(file),
-#   :content_type => "text/html")
-
 unless ENV['LIVE_TEST']
   FakeWeb.allow_net_connect = false
-  MOJO_PAGE_SAMPLES.each do |url, file_name|
+  MOJO_PAGE_SAMPLES.each do |path, file_name|
+    url = 'http://www.boxofficemojo.com/' + path
     file = File.absolute_path(File.dirname(__FILE__) + "/fixtures/#{file_name}")
-
-    # FakeWeb.register_uri(:get, url, :body => File.read(file),
-    #   :content_type => "text/html")
-    #
-
     FakeWeb.register_uri(:get, url, response: File.read(file))
   end
 end

@@ -2,7 +2,6 @@
 module Mojo
   class AlphaListingPage
     LETTERS = ['#'] + ('A'..'Z').to_a
-    USER_AGENTS = ['Windows IE 6', 'Windows IE 7', 'Windows Mozilla', 'Mac Safari', 'Mac FireFox', 'Mac Mozilla', 'Linux Mozilla', 'Linux Firefox', 'Linux Konqueror']
 
     attr_reader :page, :letter, :page_number, :uri, :movie_data, :movies
 
@@ -13,7 +12,8 @@ module Mojo
     end
 
     def self.get_page_by_letter(letter, page = 1)
-      uri = "http://www.boxofficemojo.com/movies/alphabetical.htm?letter=#{letter}&page=#{page}&p=.htm"
+      query = "letter=#{letter}&page=#{page}"
+      uri = 'http://www.boxofficemojo.com/movies/alphabetical.htm?' + query
       Mojo::AlphaListingPage.new(uri)
     rescue => e
       puts e
@@ -21,27 +21,21 @@ module Mojo
 
     def initialize(uri)
       add = Addressable::URI.parse(uri)
-      @page_number = add.query_values['page'] ? add.query_values['page'].to_i : 1
+      @page_number = (add.query_values['page'] || 1).to_i
       @letter = add.query_values['letter']
       @page = http_client.get(uri)
-      parse_movie_data
+      @movie_data = parse_movie_data
     end
 
     def parse_movie_data
-      @movie_data = []
-      table = page.at('body table:nth-of-type(2)')
-      table.css('tr:nth-of-type(n+2)').each do |tr|
+      page.search('table:nth-of-type(2) tr:nth-of-type(n+2)').map do |tr|
         link = tr.at_css('td:nth-of-type(1) a')
-        studio = tr.at_css('td:nth-of-type(2)').text
-        domestic_gross = tr.at_css('td:nth-of-type(3)').text
-        open = tr.at_css('td:nth-of-type(7)').text
-        @movie_data << {
-          title: link.text,
+        { title: link.text,
           id: /id=(.*)\.htm/i.match(link['href'])[1],
-          studio: studio,
-          domestic_gross: domestic_gross,
-          open: open
-        }
+          studio: tr.at_css('td:nth-of-type(2)').text,
+          domestic_gross: tr.at_css('td:nth-of-type(3)').text,
+          open:  tr.at_css('td:nth-of-type(7)').text
+          }
       end
     end
 
@@ -54,7 +48,7 @@ module Mojo
     end
 
     def movies
-      @movies ||= @movie_data.map { |m| Mojo::Movie.new(m[:id], title: m[:title]) }
+      @movies ||= @movie_data.map { |m| Mojo::Movie.new(m[:id], m) }
     end
 
     private
@@ -64,10 +58,7 @@ module Mojo
     end
 
     def http_client
-      Mechanize.new do |agent|
-        agent.user_agent_alias = USER_AGENTS.sample
-        agent.max_history = 0
-      end
+      Mechanize.new
     end
   end
 end

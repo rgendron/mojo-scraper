@@ -3,14 +3,15 @@ require File.expand_path('../lib/mojo_scraper/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ['Ryan Gendron']
-  gem.description   = 'Scrapes the Box Office Mojo page using the public url '
-  gem.summary       = 'when a url of a Box Office Mojo page is given it scrapes the entire page and converts into a accessible object'
+  gem.description   = 'Scrapes Box Office Mojo pages.'
+  gem.summary       = 'Easily access the publicly available information on'\
+                      'Box Office Mojo.'
   gem.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = 'mojo-scraper'
   gem.require_paths = ['lib']
   gem.version       = Mojo::Scraper::VERSION
-  gem.platform = Gem::Platform::RUBY
+  gem.platform      = Gem::Platform::RUBY
 
   gem.license = 'MIT'
 

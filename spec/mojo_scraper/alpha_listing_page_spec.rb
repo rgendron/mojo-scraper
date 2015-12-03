@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'mojo_scraper'
 
 describe Mojo::AlphaListingPage do
-  url = 'http://www.boxofficemojo.com/movies/alphabetical.htm?letter=G&page=2&p=.htm'
+  url = 'http://www.boxofficemojo.com/movies/alphabetical.htm?letter=G&page=2'
   let(:middle_page) { Mojo::AlphaListingPage.new(url) }
 
   describe '.get_alpha_listing_page_by_uri' do
@@ -21,14 +21,14 @@ describe Mojo::AlphaListingPage do
   end
 
   describe '.movie_data' do
-    let(:gettysburg) {
-      {
-        title: 'Gettysburg',
-        id: 'gettysburg',
-        studio: 'NL',
-        domestic_gross: '$10,769,960',
-        open: '10/8/1993' }
+    gettysburg = {
+      title: 'Gettysburg',
+      id: 'gettysburg',
+      studio: 'NL',
+      domestic_gross: '$10,769,960',
+      open: '10/8/1993'
     }
+
     it 'retrieves an array of hashes of movie_data' do
       expect(middle_page.movie_data.size).to eq 58
       expect(middle_page.movie_data.last).to eq gettysburg
@@ -36,12 +36,12 @@ describe Mojo::AlphaListingPage do
   end
 
   describe 'alpha listing movies' do
-    file = File.absolute_path(File.dirname(__FILE__) + '/../fixtures/starwars4.html')
+    path = File.dirname(__FILE__) + '/../fixtures/starwars4.html'
+    file = File.absolute_path(path)
     FakeWeb.register_uri(:get, %r{http://www\.boxofficemojo\.com/movies/\?id=},
-                         body: File.read(file),
-                         content_type: 'text/html')
+                         response: File.read(file))
     it 'should retreive at list of movies' do
-      middle_page.movies.each { |movie| expect(movie).to be_instance_of Mojo::Movie }
+      middle_page.movies.each { |m| expect(m).to be_instance_of Mojo::Movie }
     end
   end
 

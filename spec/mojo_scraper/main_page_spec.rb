@@ -4,13 +4,6 @@ require 'spec_helper'
 require 'mojo_scraper'
 
 describe Mojo::MainPage do
-  # This is the HTML of http://www.boxofficemojo.com/movies/?id=starwars4.htm retrieved 2015-11-20
-  # url = "http://www.boxofficemojo.com/movies/?id=starwars4.htm"
-  # file = File.absolute_path(File.dirname(__FILE__) + '/../fixtures/starwars4.html')
-  # FakeWeb.register_uri(:get,
-  #   url,
-  #   :body => File.read(file),
-  #   :content_type => "text/html")
   let(:main_page) { Mojo::MainPage.new('starwars4') }
 
   describe '.get_main_page' do
@@ -45,7 +38,7 @@ describe Mojo::MainPage do
     end
 
     it "returns movie's adjust domestic box office gross" do
-      expect(main_page.adjusted_domestic_box_office_lifetime).to eq 1_485_517_400
+      expect(main_page.adjusted_box_office_lifetime).to eq 1_485_517_400
     end
 
     it 'should find the directors' do
@@ -57,7 +50,8 @@ describe Mojo::MainPage do
     end
 
     it 'should find the actors' do
-      expect(main_page.actors).to eq ['Mark Hamill', 'Harrison Ford', 'Carrie Fisher']
+      expected = ['Mark Hamill', 'Harrison Ford', 'Carrie Fisher']
+      expect(main_page.actors).to eq expected
     end
 
     it 'should find the producers' do

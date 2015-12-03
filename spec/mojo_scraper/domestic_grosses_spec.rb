@@ -14,14 +14,13 @@ describe Mojo::DomesticGrossesPage do
   end
 
   describe '.movie_data' do
-    let(:starwars4) {
-      {
-        rank: '7',
-        title: 'Star Wars',
-        id: 'starwars4',
-        studio: 'Fox',
-        domestic_gross: '$460,998,007',
-        year: '1977^' }
+    starwars4 = {
+      rank: '7',
+      title: 'Star Wars',
+      id: 'starwars4',
+      studio: 'Fox',
+      domestic_gross: '$460,998,007',
+      year: '1977^'
     }
 
     it 'retrieves an array of hashes of movie_data' do
@@ -31,10 +30,10 @@ describe Mojo::DomesticGrossesPage do
   end
 
   describe 'domestic grosses movies' do
-    file = File.absolute_path(File.dirname(__FILE__) + '/../fixtures/starwars4.html')
+    path = File.dirname(__FILE__) + '/../fixtures/starwars4.html'
+    file = File.absolute_path(path)
     FakeWeb.register_uri(:get, %r{http://www\.boxofficemojo\.com/movies/\?id=},
-                         body: File.read(file),
-                         content_type: 'text/html')
+                         response: File.read(file))
     it 'should retreive at list of movies' do
       page.movies.each { |movie| expect(movie).to be_instance_of Mojo::Movie }
     end
