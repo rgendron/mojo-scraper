@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 module Mojo
   class AlphaListingPage
-
     LETTERS = ['#'] + ('A'..'Z').to_a
-    USER_AGENTS = ["Windows IE 6", "Windows IE 7", "Windows Mozilla", "Mac Safari", "Mac FireFox", "Mac Mozilla", "Linux Mozilla", "Linux Firefox", "Linux Konqueror"]
+    USER_AGENTS = ['Windows IE 6', 'Windows IE 7', 'Windows Mozilla', 'Mac Safari', 'Mac FireFox', 'Mac Mozilla', 'Linux Mozilla', 'Linux Firefox', 'Linux Konqueror']
 
     attr_reader :page, :letter, :page_number, :uri, :movie_data, :movies
 
@@ -13,7 +12,7 @@ module Mojo
       puts e
     end
 
-    def self.get_page_by_letter(letter, page=1)
+    def self.get_page_by_letter(letter, page = 1)
       uri = "http://www.boxofficemojo.com/movies/alphabetical.htm?letter=#{letter}&page=#{page}&p=.htm"
       Mojo::AlphaListingPage.new(uri)
     rescue => e
@@ -22,7 +21,7 @@ module Mojo
 
     def initialize(uri)
       add = Addressable::URI.parse(uri)
-      @page_number = add.query_values['page'] ?  add.query_values['page'].to_i :  1
+      @page_number = add.query_values['page'] ? add.query_values['page'].to_i : 1
       @letter = add.query_values['letter']
       @page = http_client.get(uri)
       parse_movie_data
@@ -31,7 +30,7 @@ module Mojo
     def parse_movie_data
       @movie_data = []
       table = page.at('body table:nth-of-type(2)')
-      table.css('tr:nth-of-type(n+2)').each do |tr| 
+      table.css('tr:nth-of-type(n+2)').each do |tr|
         link = tr.at_css('td:nth-of-type(1) a')
         studio = tr.at_css('td:nth-of-type(2)').text
         domestic_gross = tr.at_css('td:nth-of-type(3)').text
@@ -55,13 +54,13 @@ module Mojo
     end
 
     def movies
-      @movies ||= @movie_data.map {|m| Mojo::Movie.new(m[:id], title: m[:title])}
+      @movies ||= @movie_data.map { |m| Mojo::Movie.new(m[:id], title: m[:title]) }
     end
 
     private
 
     def parse_date(date_str)
-      Date.strptime(date_str, "%m/%d/%Y")
+      Date.strptime(date_str, '%m/%d/%Y')
     end
 
     def http_client

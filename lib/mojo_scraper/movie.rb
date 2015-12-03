@@ -2,20 +2,19 @@ module Mojo
   class Movie
     attr_accessor :id, :url, :title, :main_page, :charts, :timestamp, :release_date
 
-    def self.get_top_domestic_movies(count=100, offset=0)
+    def self.get_top_domestic_movies(count = 100, offset = 0)
       # offset=201;count =100; page_start=(offset/100) + 1; page_end = ((offset+count) / 100.0).ceil ; puts "pages: #{page_start}..#{page_end}";movies[offset..offset+count]
       first_page = offset / 100 + 1
-      last_page =  ((offset + count) / 100.0).ceil 
+      last_page =  ((offset + count) / 100.0).ceil
       # pages_count = (count / 100.0).ceil
-      movies = [*first_page..last_page].map {|i| Mojo::DomesticGrossesPage.get_page(i).movies }
+      movies = [*first_page..last_page].map { |i| Mojo::DomesticGrossesPage.get_page(i).movies }
       movies.reduce(:concat).drop(offset % 100).take(count)
     end
 
-
     def initialize(id, options = {})
       @id = id
-      options.each { |k,v| instance_variable_set("@#{k}", v) };
-    end  
+      options.each { |k, v| instance_variable_set("@#{k}", v) }
+    end
 
     def url
       @url ||= "http://www.boxofficemojo.com/movies/?id=#{id}.htm"
@@ -65,7 +64,7 @@ module Mojo
       @timestamp ||= main_page.timestamp
     end
 
-    def to_json(options = {})
+    def to_json(_options = {})
       to_hash.to_json
     end
 
@@ -84,8 +83,6 @@ module Mojo
         timestamp: timestamp
       }
     end
-
-
 
     def main_page
       @main_page ||= Mojo::MainPage.new(id)

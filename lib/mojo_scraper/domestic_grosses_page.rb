@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 module Mojo
   class DomesticGrossesPage
-
     LETTERS = ['#'] + ('A'..'Z').to_a
-    USER_AGENTS = ["Windows IE 6", "Windows IE 7", "Windows Mozilla", "Mac Safari", "Mac FireFox", "Mac Mozilla", "Linux Mozilla", "Linux Firefox", "Linux Konqueror"]
-    PER_PAGE  = 100
+    USER_AGENTS = ['Windows IE 6', 'Windows IE 7', 'Windows Mozilla', 'Mac Safari', 'Mac FireFox', 'Mac Mozilla', 'Linux Mozilla', 'Linux Firefox', 'Linux Konqueror']
+    PER_PAGE = 100
     attr_reader :page, :letter, :page_number, :uri, :movie_data, :movies
 
     def self.get_page_by_uri(uri = nil)
@@ -13,16 +12,16 @@ module Mojo
       puts e
     end
 
-    def self.get_page(page_number=1)
+    def self.get_page(page_number = 1)
       uri = "http://www.boxofficemojo.com/alltime/domestic.htm?page=#{page_number}&p=.htm"
       Mojo::DomesticGrossesPage.new(uri)
-    # rescue => e
+      # rescue => e
       # puts e
     end
 
     def initialize(uri)
       add = Addressable::URI.parse(uri)
-      @page_number = add.query_values['page'] ?  add.query_values['page'].to_i :  1
+      @page_number = add.query_values['page'] ? add.query_values['page'].to_i : 1
       @page = http_client.get(uri)
       parse_movie_data
       # @movie_ids = parse_movie_ids
@@ -34,7 +33,7 @@ module Mojo
     def parse_movie_data
       @movie_data = []
       table = page.at('body table:nth-of-type(2) table:nth-of-type(2) table[cellpadding="5"]')
-      table.css('tr:nth-of-type(n+2)').each do |tr| 
+      table.css('tr:nth-of-type(n+2)').each do |tr|
         rank = tr.at_css('td:nth-of-type(1)').text
         # puts rank
         title = tr.at_css('td:nth-of-type(2)').text
@@ -47,7 +46,7 @@ module Mojo
         domestic_gross = tr.at_css('td:nth-of-type(4)').text
         year = tr.at_css('td:nth-of-type(5)').text
         @movie_data << {
-          rank: rank, 
+          rank: rank,
           title: title,
           id: id,
           studio: studio,
@@ -59,13 +58,11 @@ module Mojo
         # domestic_gross = tr.at_css('td:nth-of-type(5)').text
         # overseas_gross = tr.at_css('td:nth-of-type(7)').text
         # year = tr.at_css('td:nth-of-type(9)').text
-
       end
-
     end
 
     def movies
-      @movies ||= @movie_data.map {|m| Mojo::Movie.new(m[:id], title: m[:title])}
+      @movies ||= @movie_data.map { |m| Mojo::Movie.new(m[:id], title: m[:title]) }
     end
 
     private
